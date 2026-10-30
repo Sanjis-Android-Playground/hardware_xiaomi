@@ -1,0 +1,51 @@
+//
+// Copyright (C) 2025 The LineageOS Project
+// SPDX-License-Identifier: Apache-2.0
+//
+
+cc_binary {
+    name: "android.hardware.vibrator.service.oplus-richtap",
+    vendor: true,
+    cflags: [
+        "-Wall",
+        "-Werror",
+        "-DLOG_TAG=\"android.hardware.vibrator.service.oplus\"",
+    ],
+    relative_install_path: "hw",
+    init_rc: ["android.hardware.vibrator.service.oplus-richtap.rc"],
+    vintf_fragments: [
+        "android.hardware.vibrator.service.oplus-richtap.xml",
+    ],
+    srcs: [
+        "service.cpp",
+        "Vibrator.cpp",
+    ],
+    shared_libs: [
+        "libcutils",
+        "libutils",
+        "liblog",
+        "libbase",
+        "libbinder_ndk",
+        "libaacvibrator",
+        "android.hardware.vibrator-V2-ndk",
+    ],
+}
+
+// The AAC RichTap engine is a version-locked vendor blob. It must be a real
+// prebuilt module rather than PRODUCT_COPY_FILES because it is an ELF file.
+cc_prebuilt_library_shared {
+    name: "libaacvibrator",
+    soc_specific: true,
+    compile_multilib: "64",
+    strip: {
+        none: true,
+    },
+    shared_libs: [
+        "libcutils",
+        "liblog",
+        "libutils",
+    ],
+    srcs: [
+        "libaacvibrator.so",
+    ],
+}
